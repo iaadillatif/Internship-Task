@@ -150,7 +150,7 @@ $user_id = UUIDv7Generator::generate();
 // Prepared Statement for INSERT with Multiple Parameters
 // Core user data: id, full_name, email, password_hash, created_at
 // All values are bound using ? placeholders to prevent SQL injection
-$stmt = $mysqli->prepare('INSERT INTO users (id, full_name, email, password_hash, created_at) VALUES (?, ?, ?, ?, NOW())');
+$stmt = $mysqli->prepare('INSERT INTO guvi_database (id, full_name, email, password_hash, created_at) VALUES (?, ?, ?, ?, NOW())');
 if (!$stmt) {
     http_response_code(500);
     echo json_encode(['success' => false, 'message' => 'Database error']);
@@ -192,7 +192,7 @@ try {
         'created_at' => new MongoDB\BSON\UTCDateTime(time() * 1000)
     ]);
     
-    $manager->executeBulkWrite('users.profiles', $bulk);
+    $manager->executeBulkWrite('guvi_database.users', $bulk);
 } catch (Exception $e) {
     $deleteStmt = $mysqli->prepare('DELETE FROM users WHERE id = ?');
     if ($deleteStmt) {

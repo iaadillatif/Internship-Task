@@ -189,7 +189,7 @@ if ($requestMethod === 'GET' || ($requestMethod === 'POST' && $action === 'fetch
         // 2. Try to get extended profile from MongoDB
         $filter = ['user_id' => $user_id];
         $query = new \MongoDB\Driver\Query($filter);
-        $mongoResult = $manager->executeQuery('users.profiles', $query);
+        $mongoResult = $manager->executeQuery('guvi_database.users', $query);
         $profiles = $mongoResult->toArray();
         
         // 3. Merge data based on what exists
@@ -280,7 +280,7 @@ if ($requestMethod === 'GET' || ($requestMethod === 'POST' && $action === 'fetch
             ['upsert' => true]
         );
 
-        $manager->executeBulkWrite('users.profiles', $bulk);
+        $manager->executeBulkWrite('guvi_database.users', $bulk);
 
         $mysqli->close();
         http_response_code(200);
@@ -451,7 +451,7 @@ function handleProfileSectionRequest($data) {
 function getAboutMe($manager, $user_id) {
     $filter = ['user_id' => $user_id];
     $query = new \MongoDB\Driver\Query($filter);
-    $result = $manager->executeQuery('guvi_profiles.about_me', $query);
+    $result = $manager->executeQuery('guvi_database.about_me', $query);
     $docs = iterator_to_array($result);
     
     if (!empty($docs)) {
@@ -488,7 +488,7 @@ function saveAboutMe($manager, $user_id) {
         ['upsert' => true]
     );
     
-    $manager->executeBulkWrite('guvi_profiles.about_me', $bulk);
+    $manager->executeBulkWrite('guvi_database.about_me', $bulk);
     echo json_encode(['success' => true, 'message' => 'About Me saved successfully']);
 }
 
@@ -497,7 +497,7 @@ function getEducation($manager, $user_id) {
     $filter = ['user_id' => $user_id];
     $options = ['sort' => ['created_at' => -1]];
     $query = new \MongoDB\Driver\Query($filter, $options);
-    $result = $manager->executeQuery('guvi_profiles.education', $query);
+    $result = $manager->executeQuery('guvi_database.education', $query);
     
     $education = [];
     foreach ($result as $doc) {
@@ -536,7 +536,7 @@ function addEducation($manager, $user_id) {
     
     $bulk = new \MongoDB\Driver\BulkWrite();
     $insertedId = $bulk->insert($doc);
-    $manager->executeBulkWrite('guvi_profiles.education', $bulk);
+    $manager->executeBulkWrite('guvi_database.education', $bulk);
     
     echo json_encode([
         'success' => true,
@@ -559,7 +559,7 @@ function deleteEducation($manager, $user_id) {
         ['_id' => new \MongoDB\BSON\ObjectId($data['id']), 'user_id' => $user_id],
         ['limit' => 1]
     );
-    $manager->executeBulkWrite('guvi_profiles.education', $bulk);
+    $manager->executeBulkWrite('guvi_database.education', $bulk);
     
     echo json_encode(['success' => true, 'message' => 'Education deleted successfully']);
 }
@@ -569,7 +569,7 @@ function getExperience($manager, $user_id) {
     $filter = ['user_id' => $user_id];
     $options = ['sort' => ['created_at' => -1]];
     $query = new \MongoDB\Driver\Query($filter, $options);
-    $result = $manager->executeQuery('guvi_profiles.experience', $query);
+    $result = $manager->executeQuery('guvi_database.experience', $query);
     
     $experience = [];
     foreach ($result as $doc) {
@@ -609,7 +609,7 @@ function addExperience($manager, $user_id) {
     
     $bulk = new \MongoDB\Driver\BulkWrite();
     $insertedId = $bulk->insert($doc);
-    $manager->executeBulkWrite('guvi_profiles.experience', $bulk);
+    $manager->executeBulkWrite('guvi_database.experience', $bulk);
     
     echo json_encode([
         'success' => true,
@@ -632,7 +632,7 @@ function deleteExperience($manager, $user_id) {
         ['_id' => new \MongoDB\BSON\ObjectId($data['id']), 'user_id' => $user_id],
         ['limit' => 1]
     );
-    $manager->executeBulkWrite('guvi_profiles.experience', $bulk);
+    $manager->executeBulkWrite('guvi_database.experience', $bulk);
     
     echo json_encode(['success' => true, 'message' => 'Experience deleted successfully']);
 }
@@ -641,7 +641,7 @@ function deleteExperience($manager, $user_id) {
 function getPortfolio($manager, $user_id) {
     $filter = ['user_id' => $user_id];
     $query = new \MongoDB\Driver\Query($filter);
-    $result = $manager->executeQuery('guvi_profiles.portfolio', $query);
+    $result = $manager->executeQuery('guvi_database.portfolio', $query);
     $docs = iterator_to_array($result);
     
     if (!empty($docs)) {
@@ -668,7 +668,7 @@ function savePortfolio($manager, $user_id) {
         ['upsert' => true]
     );
     
-    $manager->executeBulkWrite('guvi_profiles.portfolio', $bulk);
+    $manager->executeBulkWrite('guvi_database.portfolio', $bulk);
     echo json_encode(['success' => true, 'message' => 'Portfolio saved successfully']);
 }
 
@@ -677,7 +677,7 @@ function getProjects($manager, $user_id) {
     $filter = ['user_id' => $user_id];
     $options = ['sort' => ['created_at' => -1]];
     $query = new \MongoDB\Driver\Query($filter, $options);
-    $result = $manager->executeQuery('guvi_profiles.projects', $query);
+    $result = $manager->executeQuery('guvi_database.projects', $query);
     
     $projects = [];
     foreach ($result as $doc) {
@@ -711,7 +711,7 @@ function addProject($manager, $user_id) {
     
     $bulk = new \MongoDB\Driver\BulkWrite();
     $insertedId = $bulk->insert($doc);
-    $manager->executeBulkWrite('guvi_profiles.projects', $bulk);
+    $manager->executeBulkWrite('guvi_database.projects', $bulk);
     
     echo json_encode([
         'success' => true,
@@ -734,7 +734,7 @@ function deleteProject($manager, $user_id) {
         ['_id' => new \MongoDB\BSON\ObjectId($data['id']), 'user_id' => $user_id],
         ['limit' => 1]
     );
-    $manager->executeBulkWrite('guvi_profiles.projects', $bulk);
+    $manager->executeBulkWrite('guvi_database.projects', $bulk);
     
     echo json_encode(['success' => true, 'message' => 'Project deleted successfully']);
 }
@@ -743,7 +743,7 @@ function deleteProject($manager, $user_id) {
 function getSkills($manager, $user_id) {
     $filter = ['user_id' => $user_id];
     $query = new \MongoDB\Driver\Query($filter);
-    $result = $manager->executeQuery('guvi_profiles.skills', $query);
+    $result = $manager->executeQuery('guvi_database.skills', $query);
     $docs = iterator_to_array($result);
     
     if (!empty($docs)) {
@@ -769,7 +769,7 @@ function saveSkills($manager, $user_id) {
         ['upsert' => true]
     );
     
-    $manager->executeBulkWrite('guvi_profiles.skills', $bulk);
+    $manager->executeBulkWrite('guvi_database.skills', $bulk);
     echo json_encode(['success' => true, 'message' => 'Skills saved successfully']);
 }
 
@@ -778,7 +778,7 @@ function getCertifications($manager, $user_id) {
     $filter = ['user_id' => $user_id];
     $options = ['sort' => ['created_at' => -1]];
     $query = new \MongoDB\Driver\Query($filter, $options);
-    $result = $manager->executeQuery('guvi_profiles.certifications', $query);
+    $result = $manager->executeQuery('guvi_database.certifications', $query);
     
     $certifications = [];
     foreach ($result as $doc) {
@@ -815,7 +815,7 @@ function addCertification($manager, $user_id) {
     
     $bulk = new \MongoDB\Driver\BulkWrite();
     $insertedId = $bulk->insert($doc);
-    $manager->executeBulkWrite('guvi_profiles.certifications', $bulk);
+    $manager->executeBulkWrite('guvi_database.certifications', $bulk);
     
     echo json_encode([
         'success' => true,
@@ -838,7 +838,7 @@ function deleteCertification($manager, $user_id) {
         ['_id' => new \MongoDB\BSON\ObjectId($data['id']), 'user_id' => $user_id],
         ['limit' => 1]
     );
-    $manager->executeBulkWrite('guvi_profiles.certifications', $bulk);
+    $manager->executeBulkWrite('guvi_database.certifications', $bulk);
     
     echo json_encode(['success' => true, 'message' => 'Certification deleted successfully']);
 }
@@ -847,13 +847,13 @@ function getAllSectionsData($manager, $user_id) {
     $sections = [];
 
     $aboutQuery = new \MongoDB\Driver\Query(['user_id' => $user_id]);
-    $aboutDocs = iterator_to_array($manager->executeQuery('guvi_profiles.about_me', $aboutQuery));
+    $aboutDocs = iterator_to_array($manager->executeQuery('guvi_database.about_me', $aboutQuery));
     $sections['about'] = !empty($aboutDocs)
         ? ['content' => $aboutDocs[0]->content ?? '', 'updated_at' => $aboutDocs[0]->updated_at ?? '']
         : ['content' => '', 'updated_at' => ''];
 
     $educationQuery = new \MongoDB\Driver\Query(['user_id' => $user_id], ['sort' => ['created_at' => -1]]);
-    $educationDocs = $manager->executeQuery('guvi_profiles.education', $educationQuery);
+    $educationDocs = $manager->executeQuery('guvi_database.education', $educationQuery);
     $education = [];
     foreach ($educationDocs as $doc) {
         $education[] = formatEducationDoc($doc);
@@ -861,7 +861,7 @@ function getAllSectionsData($manager, $user_id) {
     $sections['education'] = $education;
 
     $experienceQuery = new \MongoDB\Driver\Query(['user_id' => $user_id], ['sort' => ['created_at' => -1]]);
-    $experienceDocs = $manager->executeQuery('guvi_profiles.experience', $experienceQuery);
+    $experienceDocs = $manager->executeQuery('guvi_database.experience', $experienceQuery);
     $experience = [];
     foreach ($experienceDocs as $doc) {
         $experience[] = formatExperienceDoc($doc);
@@ -869,13 +869,13 @@ function getAllSectionsData($manager, $user_id) {
     $sections['experience'] = $experience;
 
     $portfolioQuery = new \MongoDB\Driver\Query(['user_id' => $user_id]);
-    $portfolioDocs = iterator_to_array($manager->executeQuery('guvi_profiles.portfolio', $portfolioQuery));
+    $portfolioDocs = iterator_to_array($manager->executeQuery('guvi_database.portfolio', $portfolioQuery));
     $sections['portfolio'] = !empty($portfolioDocs)
         ? formatPortfolioDoc($portfolioDocs[0])
         : ['website_url' => '', 'linkedin_url' => '', 'github_url' => '', 'twitter_url' => ''];
 
     $projectsQuery = new \MongoDB\Driver\Query(['user_id' => $user_id], ['sort' => ['created_at' => -1]]);
-    $projectsDocs = $manager->executeQuery('guvi_profiles.projects', $projectsQuery);
+    $projectsDocs = $manager->executeQuery('guvi_database.projects', $projectsQuery);
     $projects = [];
     foreach ($projectsDocs as $doc) {
         $projects[] = formatProjectDoc($doc);
@@ -883,13 +883,13 @@ function getAllSectionsData($manager, $user_id) {
     $sections['projects'] = $projects;
 
     $skillsQuery = new \MongoDB\Driver\Query(['user_id' => $user_id]);
-    $skillsDocs = iterator_to_array($manager->executeQuery('guvi_profiles.skills', $skillsQuery));
+    $skillsDocs = iterator_to_array($manager->executeQuery('guvi_database.skills', $skillsQuery));
     $sections['skills'] = !empty($skillsDocs)
         ? formatSkillsDoc($skillsDocs[0])
         : ['hard_skills' => [], 'soft_skills' => [], 'interests' => []];
 
     $certificationsQuery = new \MongoDB\Driver\Query(['user_id' => $user_id], ['sort' => ['created_at' => -1]]);
-    $certificationsDocs = $manager->executeQuery('guvi_profiles.certifications', $certificationsQuery);
+    $certificationsDocs = $manager->executeQuery('guvi_database.certifications', $certificationsQuery);
     $certifications = [];
     foreach ($certificationsDocs as $doc) {
         $certifications[] = formatCertificationDoc($doc);
