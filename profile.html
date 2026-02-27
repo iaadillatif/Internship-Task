@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile | HCL GUVI - Learn to Code</title>
+    <meta name="description" content="Manage your HCL GUVI profile and learning journey.">
+    <script>
+        document.documentElement.classList.add('auth-checking');
+    </script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/profile.css">
+</head>
+<body class="profile-page">
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg premium-navbar">
+        <div class="container-fluid px-4">
+            <!-- Logo -->
+            <div class="navbar-brand-section">
+                <a class="navbar-brand" href="/">
+                    <img src="assets/hcl-guvi-black-logo.webp" alt="HCL GUVI Logo" class="navbar-logo">
+                </a>
+            </div>
+
+            <!-- Desktop Navigation -->
+            <div class="navbar-center d-none d-lg-flex">
+                <a class="nav-link-premium" href="index.html#features">Features</a>
+                <a class="nav-link-premium" href="index.html#courses">Courses</a>
+                <a class="nav-link-premium" href="index.html#testimonials">Testimonials</a>
+            </div>
+
+            <!-- Desktop Buttons -->
+            <div class="navbar-cta d-none d-lg-flex">
+                <button class="nav-btn-premium nav-btn-danger" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+
+            <!-- Mobile Menu Toggle -->
+            <button class="navbar-toggler premium-toggler d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#mobileNav">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </button>
+        </div>
+
+        <!-- Mobile Navigation -->
+        <div class="collapse navbar-collapse premium-mobile-menu" id="mobileNav">
+            <div class="mobile-menu-content">
+                <div class="mobile-menu-header">
+                    <a class="navbar-brand" href="index.html">
+                        <img src="assets/hcl-guvi-black-logo.webp" alt="HCL GUVI Logo" class="navbar-logo">
+                    </a>
+                    <button class="mobile-menu-close" type="button" data-bs-toggle="collapse" data-bs-target="#mobileNav">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="mobile-nav-links">
+                    <a class="mobile-nav-link" href="index.html#features">Features</a>
+                    <a class="mobile-nav-link" href="index.html#courses">Courses</a>
+                    <a class="mobile-nav-link" href="index.html#testimonials">Testimonials</a>
+                </div>
+                <div class="mobile-nav-buttons">
+                    <button class="nav-btn-premium nav-btn-danger w-100" id="logoutBtnMobile">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="header-divider"></div>
+    </nav>
+
+    <!-- Profile Main Section -->
+    <div class="profile-main-container">
+        <!-- Success/Error Messages -->
+        <div id="successMessage" class="alert alert-success d-none alert-message" role="alert" style="margin-bottom: 20px;">
+            <i class="fas fa-check-circle"></i>
+            <span id="successText"></span>
+        </div>
+        <div id="errorMessage" class="alert alert-danger d-none alert-message" role="alert" style="margin-bottom: 20px;">
+            <i class="fas fa-exclamation-circle"></i>
+            <span id="errorText"></span>
+        </div>
+
+        <div class="profile-content">
+            <div class="profile-left-column">
+            <!-- Left: Profile Display -->
+            <div class="profile-display">
+                <!-- Skeleton Loader -->
+                <div class="skeleton-container show" id="profileSkeleton">
+                    <div class="skeleton-header">
+                        <div class="skeleton skeleton-avatar"></div>
+                        <div class="skeleton-info" style="flex: 1;">
+                            <div class="skeleton skeleton-text-large" style="width: 60%;"></div>
+                            <div class="skeleton skeleton-text" style="width: 40%; margin-bottom: 8px;"></div>
+                            <div class="skeleton skeleton-text-small" style="width: 50%;"></div>
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
+                        <div class="skeleton skeleton-text-large" style="height: 80px;"></div>
+                        <div class="skeleton skeleton-text-large" style="height: 80px;"></div>
+                    </div>
+                    <div class="skeleton skeleton-text" style="margin-bottom: 15px;"></div>
+                    <div class="skeleton skeleton-text-small" style="width: 70%; margin-bottom: 15px;"></div>
+                    <div class="skeleton skeleton-text" style="margin-bottom: 15px;"></div>
+                    <div class="skeleton skeleton-text-small" style="width: 70%;"></div>
+                </div>
+
+                <!-- Profile Content (Hidden initially) -->
+                <div id="profileContent">
+                <!-- Profile Header -->
+                <div class="profile-header">
+                    <div class="profile-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="profile-info-header">
+                        <h1 class="profile-name" id="displayFullName"></h1>
+                        <p class="profile-title" id="displayDesignation">-</p>
+                        <p class="profile-location" id="displayLocation">-</p>
+                    </div>
+                    <button class="profile-edit-btn" id="editProfileBtn" title="Edit Profile">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                </div>
+
+                <!-- Profile Details -->
+                <div class="profile-details">
+                    <div class="profile-detail-row">
+                        <div>
+                            <div class="profile-detail-label">Email ID (Private)</div>
+                            <div class="profile-detail-value" id="displayEmail">-</div>
+                        </div>
+                        <div class="profile-detail-badge">
+                            <i class="fas fa-check-circle"></i> Verified
+                        </div>
+                    </div>
+                    <div class="profile-detail-row">
+                        <div>
+                            <div class="profile-detail-label">Phone Number</div>
+                            <div class="profile-detail-value" id="displayPhone">-</div>
+                        </div>
+                    </div>
+                    <div class="profile-detail-row">
+                        <div>
+                            <div class="profile-detail-label">Date of Birth</div>
+                            <div class="profile-detail-value" id="displayDOB">-</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Buttons -->
+                <div class="profile-buttons">
+                    <button class="profile-btn profile-btn-primary">
+                        <i class="fas fa-download"></i> Download as Resume
+                    </button>
+                    <button class="profile-btn profile-btn-outline">
+                        <i class="fas fa-share-alt"></i> Share Profile
+                    </button>
+                </div>
+                </div>
+            </div>
+
+            
+        <!-- About Me Section -->
+        <div class="profile-section about-me-section">
+            <div class="section-header">
+                <h3><i class="fas fa-user-circle"></i> About</h3>
+                <button class="section-edit-btn" data-section="about" title="Edit About">
+                    <i class="fas fa-edit"></i>
+                </button>
+            </div>
+            <div class="section-content">
+                <div id="aboutMeDisplay" class="about-me-display"></div>
+                <div class="about-empty-state"></div>
+            </div>
+            <form class="section-form about-me-form" style="display: none;">
+                <p class="about-help-text">Tell us about your years of experience, industry, or skills. People also talk about their achievements or previous job experiences.</p>
+                <textarea id="aboutMeInput" class="form-control" placeholder="Tell us about yourself..." required></textarea>
+                <button type="submit" class="btn btn-sm btn-success mt-3"><i class="fas fa-save"></i> Save</button>
+                <button type="button" class="btn btn-sm btn-secondary mt-3 ms-2" onclick="cancelEdit('about')"><i class="fas fa-times"></i> Cancel</button>
+            </form>
+        </div>
+
+        <!-- Educational Qualifications Section -->
+        <div class="profile-section education-section">
+            <div class="section-header">
+                <h3><i class="fas fa-graduation-cap"></i> Educational Qualifications</h3>
+                <button class="section-add-btn" data-section="education" title="Add Education">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+            <div class="education-list"></div>
+            <form class="education-form section-form" style="display: none;">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Level *</label>
+                        <select class="form-control" name="level" required>
+                            <option value="">Select Level</option>
+                            <option value="High School">High School</option>
+                            <option value="Diploma">Diploma</option>
+                            <option value="Bachelor">Bachelor's</option>
+                            <option value="Master">Master's</option>
+                            <option value="PhD">PhD</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>School/College Name *</label>
+                        <input type="text" class="form-control" name="school_name" placeholder="School/College Name" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Board/Department *</label>
+                        <input type="text" class="form-control" name="board" placeholder="e.g., CBSE, ICSE, Science" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Grade/CGPA *</label>
+                        <input type="text" class="form-control" name="grade" placeholder="e.g., 9.5, A+" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group form-col-1-3">
+                        <label>Start Year * <small>Month</small></label>
+                        <div class="date-group">
+                            <select class="form-control form-control-sm" name="start_month" required>
+                                <option value="">Month</option>
+                                <option value="01">January</option>
+                                <option value="02">February</option>
+                                <option value="03">March</option>
+                                <option value="04">April</option>
+                                <option value="05">May</option>
+                                <option value="06">June</option>
+                                <option value="07">July</option>
+                                <option value="08">August</option>
+                                <option value="09">September</option>
+                                <option value="10">October</option>
+                                <option value="11">November</option>
+                                <option value="12">December</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group form-col-2-3">
+                        <label style="opacity: 0;">Year</label>
+                        <input type="number" class="form-control" name="start_year" placeholder="Year" min="1900" max="2100" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group form-col-1-3">
+                        <label>Graduation Year * <small>Month</small></label>
+                        <div class="date-group">
+                            <select class="form-control form-control-sm" name="end_month" required>
+                                <option value="">Month</option>
+                                <option value="01">January</option>
+                                <option value="02">February</option>
+                                <option value="03">March</option>
+                                <option value="04">April</option>
+                                <option value="05">May</option>
+                                <option value="06">June</option>
+                                <option value="07">July</option>
+                                <option value="08">August</option>
+                                <option value="09">September</option>
+                                <option value="10">October</option>
+                                <option value="11">November</option>
+                                <option value="12">December</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group form-col-2-3">
+                        <label style="opacity: 0;">Year</label>
+                        <input type="number" class="form-control" name="end_year" placeholder="Year" min="1900" max="2100" required>
+                    </div>
+                </div>
+                <div class="form-row full">
+                    <div class="form-group">
+                        <label>A short summary about your experience here *</label>
+                        <textarea class="form-control" name="summary" placeholder="Tell us about what you learned" required></textarea>
+                    </div>
+                </div>
+                <div class="form-buttons">
+                    <button type="submit" class="btn btn-sm btn-success"><i class="fas fa-save"></i> Add Education</button>
+                    <button type="button" class="btn btn-sm btn-secondary ms-2" onclick="cancelEdit('education')"><i class="fas fa-times"></i> Cancel</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Professional Experience Section -->
+        <div class="profile-section experience-section">
+            <div class="section-header">
+                <h3><i class="fas fa-briefcase"></i> Professional Experience</h3>
+                <button class="section-add-btn" data-section="experience" title="Add Experience">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+            <div class="experience-list"></div>
+            <form class="experience-form section-form" style="display: none;">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Job Title *</label>
+                        <input type="text" class="form-control" name="job_title" placeholder="Job Title" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Company *</label>
+                        <input type="text" class="form-control" name="company" placeholder="Company Name" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Employment Type *</label>
+                        <select class="form-control" name="employment_type" required>
+                            <option value="">Select Type</option>
+                            <option value="Full-time">Full-time</option>
+                            <option value="Part-time">Part-time</option>
+                            <option value="Freelance">Freelance</option>
+                            <option value="Contract">Contract</option>
+                            <option value="Internship">Internship</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Location *</label>
+                        <input type="text" class="form-control" name="location" placeholder="City, Country" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group form-col-1-3">
+                        <label>Start Year * <small>Month</small></label>
+                        <div class="date-group">
+                            <select class="form-control form-control-sm" name="start_month" required>
+                                <option value="">Month</option>
+                                <option value="01">January</option>
+                                <option value="02">February</option>
+                                <option value="03">March</option>
+                                <option value="04">April</option>
+                                <option value="05">May</option>
+                                <option value="06">June</option>
+                                <option value="07">July</option>
+                                <option value="08">August</option>
+                                <option value="09">September</option>
+                                <option value="10">October</option>
+                                <option value="11">November</option>
+                                <option value="12">December</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group form-col-2-3">
+                        <label style="opacity: 0;">Year</label>
+                        <input type="number" class="form-control" name="start_year" placeholder="Year" min="1900" max="2100" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>I currently work here</label>
+                        <input type="checkbox" name="currently_working" class="form-check-input" style="width: auto; margin-top: 8px;">
+                    </div>
+                </div>
+                <div class="form-row end-date-row">
+                    <div class="form-group form-col-1-3">
+                        <label>End Year * <small>Month</small></label>
+                        <div class="date-group">
+                            <select class="form-control form-control-sm" name="end_month">
+                                <option value="">Month</option>
+                                <option value="01">January</option>
+                                <option value="02">February</option>
+                                <option value="03">March</option>
+                                <option value="04">April</option>
+                                <option value="05">May</option>
+                                <option value="06">June</option>
+                                <option value="07">July</option>
+                                <option value="08">August</option>
+                                <option value="09">September</option>
+                                <option value="10">October</option>
+                                <option value="11">November</option>
+                                <option value="12">December</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group form-col-2-3">
+                        <label style="opacity: 0;">Year</label>
+                        <input type="number" class="form-control" name="end_year" placeholder="Year" min="1900" max="2100">
+                    </div>
+                </div>
+                <div class="form-row full">
+                    <div class="form-group">
+                        <label>A short summary about your experience here *</label>
+                        <textarea class="form-control" name="summary" placeholder="Tell us about your role and achievements" required></textarea>
+                    </div>
+                </div>
+                <div class="form-buttons">
+                    <button type="submit" class="btn btn-sm btn-success"><i class="fas fa-save"></i> Add Experience</button>
+                    <button type="button" class="btn btn-sm btn-secondary ms-2" onclick="cancelEdit('experience')"><i class="fas fa-times"></i> Cancel</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Portfolio Section -->
+        <div class="profile-section portfolio-section">
+            <div class="section-header">
+                <h3><i class="fas fa-link"></i> Portfolio & Social Links</h3>
+                <button class="section-edit-btn" data-section="portfolio" title="Edit Portfolio">
+                    <i class="fas fa-edit"></i>
+                </button>
+            </div>
+            <div class="portfolio-display"></div>
+            <form class="portfolio-form section-form" style="display: none;">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-globe"></i> Website URL</label>
+                        <input type="url" class="form-control" name="website_url" placeholder="https://yourwebsite.com">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fab fa-linkedin"></i> LinkedIn Profile URL</label>
+                        <input type="url" class="form-control" name="linkedin_url" placeholder="https://linkedin.com/in/yourprofile">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fab fa-github"></i> GitHub URL</label>
+                        <input type="url" class="form-control" name="github_url" placeholder="https://github.com/yourprofile">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fab fa-twitter"></i> Twitter URL</label>
+                        <input type="url" class="form-control" name="twitter_url" placeholder="https://twitter.com/yourprofile">
+                    </div>
+                </div>
+                <div class="form-buttons">
+                    <button type="submit" class="btn btn-sm btn-success"><i class="fas fa-save"></i> Save Portfolio</button>
+                    <button type="button" class="btn btn-sm btn-secondary ms-2" onclick="cancelEdit('portfolio')"><i class="fas fa-times"></i> Cancel</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Projects Section -->
+        <div class="profile-section projects-section">
+            <div class="section-header">
+                <h3><i class="fas fa-code-branch"></i> Projects</h3>
+                <button class="section-add-btn" data-section="projects" title="Add Project">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+            <div class="projects-list"></div>
+            <form class="projects-form section-form" style="display: none;">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Project Name *</label>
+                        <input type="text" class="form-control" name="project_name" placeholder="Project Name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Role in the project *</label>
+                        <input type="text" class="form-control" name="role" placeholder="Your role" required>
+                    </div>
+                </div>
+                <div class="form-row full">
+                    <div class="form-group">
+                        <label>Project Link *</label>
+                        <input type="url" class="form-control" name="project_link" placeholder="https://yourproject.com" required>
+                    </div>
+                </div>
+                <div class="form-row full">
+                    <div class="form-group">
+                        <label>A short summary about your contribution *</label>
+                        <textarea class="form-control" name="summary" placeholder="Describe your contribution" required></textarea>
+                    </div>
+                </div>
+                <div class="form-buttons">
+                    <button type="submit" class="btn btn-sm btn-success"><i class="fas fa-save"></i> Add Project</button>
+                    <button type="button" class="btn btn-sm btn-secondary ms-2" onclick="cancelEdit('projects')"><i class="fas fa-times"></i> Cancel</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Skills & Areas of Interest Section -->
+        <div class="profile-section skills-section">
+            <div class="section-header">
+                <h3><i class="fas fa-star"></i> Skills & Areas of Interest</h3>
+                <button class="section-edit-btn" data-section="skills" title="Edit Skills">
+                    <i class="fas fa-edit"></i>
+                </button>
+            </div>
+            <div class="skills-display"></div>
+            <form class="skills-form section-form" style="display: none;">
+                <div class="skills-category">
+                    <label><strong>Hard Skills</strong></label>
+                    <div class="skills-tags" id="hardSkillsTags"></div>
+                    <div class="skill-options">
+                        <label class="skill-checkbox"><input type="checkbox" name="hard_skills" value="HTML"> HTML</label>
+                        <label class="skill-checkbox"><input type="checkbox" name="hard_skills" value="CSS"> CSS</label>
+                        <label class="skill-checkbox"><input type="checkbox" name="hard_skills" value="JavaScript"> JavaScript</label>
+                        <label class="skill-checkbox"><input type="checkbox" name="hard_skills" value="React"> React</label>
+                        <label class="skill-checkbox"><input type="checkbox" name="hard_skills" value="Vue.js"> Vue.js</label>
+                        <label class="skill-checkbox"><input type="checkbox" name="hard_skills" value="Node.js"> Node.js</label>
+                        <label class="skill-checkbox"><input type="checkbox" name="hard_skills" value="MongoDB"> MongoDB</label>
+                        <label class="skill-checkbox"><input type="checkbox" name="hard_skills" value="Python"> Python</label>
+                        <label class="skill-checkbox"><input type="checkbox" name="hard_skills" value="Java"> Java</label>
+                        <label class="skill-checkbox"><input type="checkbox" name="hard_skills" value="Cybersecurity"> Cybersecurity</label>
+                        <label class="skill-checkbox"><input type="checkbox" name="hard_skills" value="Data Handling"> Data Handling</label>
+                        <label class="skill-checkbox"><input type="checkbox" name="hard_skills" value="Ethical Hacking"> Ethical Hacking</label>
+                    </div>
+                </div>
+
+                <div class="skills-category">
+                    <label><strong>Soft Skills</strong></label>
+                    <div class="skill-options">
+                        <label class="skill-checkbox"><input type="checkbox" name="soft_skills" value="Creative"> Creative</label>
+                        <label class="skill-checkbox"><input type="checkbox" name="soft_skills" value="Passionate"> Passionate</label>
+                        <label class="skill-checkbox"><input type="checkbox" name="soft_skills" value="Perfectionist"> Perfectionist</label>
+                        <label class="skill-checkbox"><input type="checkbox" name="soft_skills" value="Team Player"> Team Player</label>
+                        <label class="skill-checkbox"><input type="checkbox" name="soft_skills" value="Problem Solver"> Problem Solver</label>
+                        <label class="skill-checkbox"><input type="checkbox" name="soft_skills" value="Leader"> Leader</label>
+                        <label class="skill-checkbox"><input type="checkbox" name="soft_skills" value="Communicator"> Communicator</label>
+                    </div>
+                </div>
+
+                <div class="skills-category">
+                    <label><strong>Area of Interest</strong></label>
+                    <div class="skill-options">
+                        <label class="skill-checkbox"><input type="checkbox" name="interests" value="Entrepreneurship"> Entrepreneurship</label>
+                        <label class="skill-checkbox"><input type="checkbox" name="interests" value="Programming"> Programming</label>
+                        <label class="skill-checkbox"><input type="checkbox" name="interests" value="Digital Marketing"> Digital Marketing</label>
+                        <label class="skill-checkbox"><input type="checkbox" name="interests" value="Product Management"> Product Management</label>
+                        <label class="skill-checkbox"><input type="checkbox" name="interests" value="Design"> Design</label>
+                        <label class="skill-checkbox"><input type="checkbox" name="interests" value="AI/ML"> AI/ML</label>
+                    </div>
+                </div>
+
+                <div class="form-buttons">
+                    <button type="submit" class="btn btn-sm btn-success"><i class="fas fa-save"></i> Save Skills</button>
+                    <button type="button" class="btn btn-sm btn-secondary ms-2" onclick="cancelEdit('skills')"><i class="fas fa-times"></i> Cancel</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Certifications Section -->
+        <div class="profile-section certifications-section">
+            <div class="section-header">
+                <h3><i class="fas fa-certificate"></i> Certifications</h3>
+                <button class="section-add-btn" data-section="certifications" title="Add Certification">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+            <div class="certifications-list"></div>
+            <form class="certifications-form section-form" style="display: none;">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Name *</label>
+                        <input type="text" class="form-control" name="name" placeholder="Certification Name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Issuing Organisation *</label>
+                        <input type="text" class="form-control" name="issuing_org" placeholder="Organization Name" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Credential ID *</label>
+                        <input type="text" class="form-control" name="credential_id" placeholder="Credential ID" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Credential Link *</label>
+                        <input type="url" class="form-control" name="credential_link" placeholder="https://credential.com" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group form-col-1-2">
+                        <label>Issue Year *</label>
+                        <input type="number" class="form-control" name="issue_year" placeholder="Year" min="2000" max="2100" required>
+                    </div>
+                    <div class="form-group form-col-1-2">
+                        <label>Expiry Year</label>
+                        <input type="number" class="form-control" name="expiry_year" placeholder="Year" min="2000" max="2100">
+                    </div>
+                </div>
+                <div class="form-row full">
+                    <label class="form-check-label">
+                        <input type="checkbox" name="no_expiry" class="form-check-input"> This Certificate will not expire
+                    </label>
+                </div>
+                <div class="form-buttons">
+                    <button type="submit" class="btn btn-sm btn-success"><i class="fas fa-save"></i> Add Certification</button>
+                    <button type="button" class="btn btn-sm btn-secondary ms-2" onclick="cancelEdit('certifications')"><i class="fas fa-times"></i> Cancel</button>
+                </div>
+            </form>
+        </div>
+            </div>
+
+            <!-- Right: Your Stats -->
+            <div class="profile-stats">
+                <!-- Stats Skeleton Loader -->
+                <div class="skeleton-container show" id="statsSkeleton">
+                    <div class="stats-card">
+                        <div class="skeleton skeleton-text-large" style="width: 40%; margin-bottom: 20px;"></div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                            <div class="skeleton" style="height: 60px;"></div>
+                            <div class="skeleton" style="height: 60px;"></div>
+                            <div class="skeleton" style="height: 60px;"></div>
+                            <div class="skeleton" style="height: 60px;"></div>
+                        </div>
+                    </div>
+                    <div class="stats-card">
+                        <div class="skeleton" style="height: 150px;"></div>
+                    </div>
+                </div>
+
+                <!-- Stats Content (Hidden initially) -->
+                <div id="statsContent" style="display: none;">
+                <!-- Stats Card -->
+                <div class="stats-card">
+                    <h3>Your Stats <span class="stats-card-subtitle">(Private to you)</span></h3>
+                    <div class="stats-grid">
+                        <div class="stats-item">
+                            <div class="stats-item-label">Total Profile Visits</div>
+                            <div class="stats-item-value" id="statsProfileVisits">0</div>
+                        </div>
+                        <div class="stats-item">
+                            <div class="stats-item-label">Company Visits</div>
+                            <div class="stats-item-value" id="statsCompanyVisits">0</div>
+                        </div>
+                        <div class="stats-item">
+                            <div class="stats-item-label">Ongoing Courses</div>
+                            <div class="stats-item-value" id="statsOngoingCourses">0</div>
+                        </div>
+                        <div class="stats-item">
+                            <div class="stats-item-label">Courses Completed</div>
+                            <div class="stats-item-value" id="statsCompletedCourses">0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rewards Card -->
+                <div class="rewards-card">
+                    <div class="rewards-icon">
+                        <i class="fas fa-gift"></i>
+                    </div>
+                    <h4>Redeem your Rewards</h4>
+                    <p>You can use the earned Geekoins to redeem exciting rewards.</p>
+                    <a href="#" class="rewards-btn">Go to Rewards</a>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div class="edit-profile-modal" id="editProfileModal">
+        <form class="edit-profile-form" id="editProfileForm">
+            <h2>Edit Profile</h2>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="editFirstName">First Name *</label>
+                    <input type="text" id="editFirstName" required>
+                </div>
+                <div class="form-group">
+                    <label for="editLastName">Last Name *</label>
+                    <input type="text" id="editLastName" required>
+                </div>
+            </div>
+
+            <div class="form-row full">
+                <div class="form-group">
+                    <label for="editEmail">Email * <small>(Disabled)</small></label>
+                    <input type="email" id="editEmail" disabled>
+                </div>
+            </div>
+
+            <div class="form-row full">
+                <div class="form-group">
+                    <label for="editPhone">Phone Number *</label>
+                    <input type="tel" id="editPhone" required>
+                    <div class="visibility-toggle">
+                        <input type="checkbox" id="phoneVisibility">
+                        <label for="phoneVisibility" style="margin: 0; cursor: pointer;">Visible to Public</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row full">
+                <div class="form-group">
+                    <label for="editDOB">Date of Birth *</label>
+                    <input type="date" id="editDOB" required>
+                    <div class="visibility-toggle">
+                        <input type="checkbox" id="dobVisibility">
+                        <label for="dobVisibility" style="margin: 0; cursor: pointer;">Visible to Public</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="editDesignation">Designation *</label>
+                    <input type="text" id="editDesignation" required>
+                </div>
+                <div class="form-group">
+                    <label for="editGender">Gender *</label>
+                    <select id="editGender" required>
+                        <option value="">Select Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="editCountry">Country *</label>
+                    <input type="text" id="editCountry" required>
+                </div>
+                <div class="form-group">
+                    <label for="editState">State *</label>
+                    <input type="text" id="editState" required>
+                </div>
+            </div>
+
+            <div class="form-row full">
+                <div class="form-group">
+                    <label for="editCity">City *</label>
+                    <input type="text" id="editCity" required>
+                </div>
+            </div>
+
+            <div class="form-buttons">
+                <button type="submit" class="form-btn form-btn-save">
+                    <i class="fas fa-save"></i> Save Changes
+                </button>
+                <button type="button" class="form-btn form-btn-cancel" id="closeEditModal">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Section Form Modal -->
+    <div class="edit-profile-modal" id="sectionFormModal">
+        <div class="edit-profile-form section-form-modal-panel">
+            <div class="section-form-modal-header">
+                <h2 id="sectionFormModalTitle">Edit Section</h2>
+                <button type="button" class="section-form-close-btn" id="closeSectionModal" aria-label="Close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="sectionFormModalBody" class="section-form-modal-body"></div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        (function () {
+            const finalizeHeaderAuth = () => document.documentElement.classList.remove('auth-checking');
+            const token = localStorage.getItem('sessionToken');
+            if (!token) {
+                finalizeHeaderAuth();
+                return;
+            }
+
+            const desktopCta = document.querySelector('.navbar-cta');
+            if (desktopCta) {
+                desktopCta.innerHTML = `
+                    <div class="header-user-menu">
+                        <button class="nav-btn-premium nav-btn-outline header-user-trigger" type="button" id="headerUserTrigger">
+                            <span>My Dashboard</span>
+                            <span class="header-user-avatar"><i class="fas fa-user"></i></span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="header-user-dropdown" id="headerUserDropdown">
+                            <a href="profile.html" class="header-user-item"><i class="fas fa-id-card"></i> My Profile</a>
+                            <button type="button" class="header-user-item" data-header-logout><i class="fas fa-sign-out-alt"></i> Logout</button>
+                        </div>
+                    </div>
+                `;
+
+                const trigger = document.getElementById('headerUserTrigger');
+                const dropdown = document.getElementById('headerUserDropdown');
+                if (trigger && dropdown) {
+                    trigger.addEventListener('click', function (e) {
+                        e.stopPropagation();
+                        dropdown.classList.toggle('show');
+                    });
+                    document.addEventListener('click', function () {
+                        dropdown.classList.remove('show');
+                    });
+                }
+            }
+
+            const mobileButtons = document.querySelector('.mobile-nav-buttons');
+            if (mobileButtons) {
+                mobileButtons.innerHTML = `
+                    <a href="profile.html" class="nav-btn-premium nav-btn-outline w-100">My Dashboard</a>
+                    <button type="button" class="nav-btn-premium nav-btn-danger w-100" data-header-logout><i class="fas fa-sign-out-alt"></i> Logout</button>
+                `;
+            }
+
+            document.querySelectorAll('[data-header-logout]').forEach(button => {
+                button.addEventListener('click', function () {
+                    fetch('php/profile.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ action: 'logout', token })
+                    }).finally(() => {
+                        localStorage.removeItem('sessionToken');
+                        window.location.href = 'login.html';
+                    });
+                });
+            });
+
+            finalizeHeaderAuth();
+        })();
+    </script>
+    <script src="js/profile.js"></script>
+</body>
+</html>
